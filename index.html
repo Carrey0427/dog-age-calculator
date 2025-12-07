@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<title>🐶 妙麗歲數計算機</title>
+<style>
+    body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #fbeee0;
+    }
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        width: 350px;
+        text-align: center;
+    }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    input, button {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #999;
+        font-size: 16px;
+    }
+    button {
+        background-color: #ff9900;
+        border: none;
+        cursor: pointer;
+        margin-top: 15px;
+        color: #fff;
+        width: 100%;
+    }
+    button:hover { background-color: #e38700; }
+    .result {
+        margin-top: 20px;
+        font-size: 16px;
+        background: #fff6e3;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #ffaa22;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>🐶 妙麗歲數計算機</h1>
+    
+    <label>狗狗的出生日期：</label>
+    <input type="date" id="birthInput"><br>
+
+    <button onclick="calcAge()">開始計算</button>
+
+    <div id="result" class="result" style="display:none;"></div>
+</div>
+
+<script>
+// ⬇️ 頁面載入時讀取之前儲存的資料
+window.onload = function() {
+    const savedBirthDate = localStorage.getItem("dog_birth");
+    const savedResult = localStorage.getItem("dog_result");
+
+    if (savedBirthDate) {
+        document.getElementById("birthInput").value = savedBirthDate;
+    }
+    if (savedResult) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = savedResult;
+    }
+};
+
+function calcAge() {
+    const birthInput = document.getElementById("birthInput");
+    const birth = new Date(birthInput.value);
+    const today = new Date();
+
+    if (!birthInput.value) {
+        alert("請先輸入狗狗的生日！");
+        return;
+    }
+
+    // 計算狗狗年齡
+    const ageInYears = (today - birth) / (1000 * 60 * 60 * 24 * 365);
+    const dogAge = ageInYears.toFixed(1);
+
+    // 換算成"人類年齡"
+    let humanAge;
+    if (ageInYears <= 2) humanAge = ageInYears * 12;
+    else humanAge = 24 + (ageInYears - 2) * 4;
+
+    humanAge = humanAge.toFixed(1);
+
+    const resultText =
+        `<strong>妙麗現在大約 ${dogAge} 歲狗年齡，</strong><br>
+         換算成人類年齡大約是 <strong>${humanAge} 歲。</strong>`;
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = resultText;
+
+    // ⬇️ 儲存到 localStorage
+    localStorage.setItem("dog_birth", birthInput.value);
+    localStorage.setItem("dog_result", resultText);
+}
+</script>
+
+</body>
+</html>
